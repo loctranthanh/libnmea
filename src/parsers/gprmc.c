@@ -48,7 +48,12 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 			return -1;
 		}
 		break;
-
+    case NMEA_GPRMC_VALID:
+        if (value[0] == 'A') {
+            data->valid = 1;
+        } else {
+            data->valid = 0;
+        }
 	case NMEA_GPRMC_LATITUDE:
 		/* Parse latitude */
 		if (-1 == nmea_position_parse(value, &data->latitude)) {
@@ -78,7 +83,12 @@ parse(nmea_parser_s *parser, char *value, int val_index)
 			return -1;
 		}
 		break;
-
+    case NMEA_GPRMC_SPEED:
+        data->speed = atof(value);
+        break;
+    case NMEA_GPRMC_COURSE:
+        data->course = atof(value);
+        break;
 	case NMEA_GPRMC_DATE:
 		/* Parse date */
 		if (-1 == nmea_date_parse(value, &data->time)) {
