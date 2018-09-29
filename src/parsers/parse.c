@@ -1,4 +1,6 @@
 #include "parse.h"
+const char *
+my_strptime (const char *buf, const char *fmt, struct tm *tm);
 
 int
 nmea_position_parse(char *s, nmea_position *pos)
@@ -63,7 +65,7 @@ nmea_time_parse(char *s, struct tm *time)
 		return -1;
 	}
 
-	rv = strptime(s, NMEA_TIME_FORMAT, time);
+	rv = my_strptime(s, NMEA_TIME_FORMAT, time);
 	if (NULL == rv || (int) (rv - s) != NMEA_TIME_FORMAT_LEN) {
 		return -1;
 	}
@@ -83,7 +85,7 @@ nmea_date_parse(char *s, struct tm *time)
 		return -1;
 	}
 
-	rv = strptime(s, NMEA_DATE_FORMAT, time);
+	rv = my_strptime(s, NMEA_DATE_FORMAT, time);
 	if (NULL == rv || (int) (rv - s) != NMEA_DATE_FORMAT_LEN) {
 		return -1;
 	}
