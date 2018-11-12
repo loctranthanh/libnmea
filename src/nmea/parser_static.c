@@ -29,6 +29,10 @@ DECLARE_PARSER_API(gpgga)
 #ifdef ENABLE_GPRMC
 DECLARE_PARSER_API(gprmc)
 #endif
+#ifdef ENABLE_GPGSV
+DECLARE_PARSER_API(gpgsv)
+#endif
+
 
 nmea_parser_module_s parsers[PARSER_COUNT];
 
@@ -53,6 +57,9 @@ nmea_load_parsers()
 #endif
 #ifdef ENABLE_GPRMC
 	PARSER_LOAD(gprmc);
+#endif
+#ifdef ENABLE_GPGSV
+    PARSER_LOAD(gpgsv);
 #endif
 
 	return PARSER_COUNT;
@@ -79,6 +86,28 @@ nmea_get_parser_by_type(nmea_t type)
 	return (nmea_parser_module_s *) NULL;
 }
 
+static int strncmp_masking(const char *str1, const char *str2, int max_len)
+{
+    int str1_len = strlen(str1);
+    int str2_len = strlen(str2);
+    int min_str_cmp = str1_len > str2_len ? str2_len : str1_len;
+
+    if (min_str_cmp > max_len) {
+        return -1;
+    }
+    int ret = 0;
+    for (int i=0; i<min_str_cmp; i++) {
+        if (str2[i] == '*') {
+            continue;
+        }
+        if (str1[i] != str2[i]) {
+            ret = 1;
+            break;
+        }
+    }
+    return ret;
+}
+
 nmea_parser_module_s *
 nmea_get_parser_by_sentence(const char *sentence)
 {
@@ -89,7 +118,7 @@ nmea_get_parser_by_sentence(const char *sentence)
 			continue;
 		}
 
-		if (0 == strncmp(sentence + 1, parsers[i].parser.type_word, NMEA_PREFIX_LENGTH)) {
+		if (0 == strncmp_masking(sentence + 1, parsers[i].parser.type_word, NMEA_PREFIX_LENGTH)) {
 			return &(parsers[i]);
 		}
 	}

@@ -10,7 +10,8 @@ typedef enum {
 	NMEA_UNKNOWN,
 	NMEA_GPGGA,
 	NMEA_GPGLL,
-	NMEA_GPRMC
+	NMEA_GPRMC,
+    NMEA_GPGSV
 } nmea_t;
 
 /* NMEA cardinal direction types */
@@ -42,7 +43,7 @@ typedef struct {
 #define NMEA_MAX_LENGTH		82
 
 /* NMEA sentence endings, should be \r\n according the NMEA 0183 standard */
-#define NMEA_END_CHAR_1		'\n'
+#define NMEA_END_CHAR_1		'\r'
 #define NMEA_END_CHAR_2		'\n'
 
 /* NMEA sentence prefix length (num chars), Ex: GPGLL */
