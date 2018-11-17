@@ -54,6 +54,7 @@ parse(nmea_parser_s *parser, char *value, int val_index)
         } else {
             data->valid = 0;
         }
+        break;
 	case NMEA_GPRMC_LATITUDE:
 		/* Parse latitude */
 		if (-1 == nmea_position_parse(value, &data->latitude)) {
